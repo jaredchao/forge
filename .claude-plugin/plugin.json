@@ -1,38 +1,18 @@
 {
   "name": "forge",
-  "version": "1.0.0",
   "description": "PRD-driven automated development system with AI-powered spec generation, task execution, and quality review",
-  "author": "Jared",
-  "commands": [
-    {
-      "name": "prd",
-      "description": "Generate development specs from PRD documents (supports new requirements and change requests)"
-    },
-    {
-      "name": "ai",
-      "description": "Execute automated development workflow based on generated specs"
-    },
-    {
-      "name": "init",
-      "description": "Initialize Forge project structure"
-    }
-  ],
-  "skills": [
-    {
-      "name": "forge-implementer",
-      "description": "General-purpose implementation agent for executing development tasks"
-    },
-    {
-      "name": "forge-frontend-engineer",
-      "description": "Specialized agent for frontend development tasks"
-    },
-    {
-      "name": "forge-qa-engineer",
-      "description": "Quality assurance agent for testing and validation"
-    },
-    {
-      "name": "forge-doc-syncer",
-      "description": "Documentation synchronization agent"
-    }
+  "version": "1.0.0",
+  "author": {
+    "name": "Jared",
+    "email": "jaredchao@users.noreply.github.com"
+  },
+  "homepage": "https://github.com/jaredchao/forge",
+  "repository": "https://github.com/jaredchao/forge",
+  "license": "MIT",
+  "keywords": [
+    "prd",
+    "automation",
+    "code-generation",
+    "ai-agents"
   ]
 }
