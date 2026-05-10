@@ -1,0 +1,22 @@
+{
+  "name": "forge",
+  "owner": {
+    "name": "Jared",
+    "email": "jaredchao@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "PRD-driven automated development system",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "forge",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/jaredchao/forge.git"
+      },
+      "description": "PRD-driven automated development system with AI-powered spec generation, task execution, and quality review",
+      "version": "1.0.0"
+    }
+  ]
+}
