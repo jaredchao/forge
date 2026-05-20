@@ -1,0 +1,25 @@
+README.md
+  s_0e37ab49ccf608::t_6c7bea051191e4 138
+skills/forge-backend-engineer/SKILL.md
+  s_0e37ab49ccf608::t_6c7bea051191e4 1-124
+README.zh-CN.md
+  s_0e37ab49ccf608::t_6c7bea051191e4 138
+commands/forge-ai-nodes/N3-execute-task.md
+  s_0e37ab49ccf608::t_6c7bea051191e4 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "be26b6c30e05ff051223e5d41a0d7000af1967b0",
+  "prompts": {},
+  "sessions": {
+    "s_0e37ab49ccf608": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e4366-f793-7272-858d-a96457c86d99",
+        "model": "gpt-5.5"
+      },
+      "human_author": "muluo <mengchao1027@gmail.com>"
+    }
+  }
+}
