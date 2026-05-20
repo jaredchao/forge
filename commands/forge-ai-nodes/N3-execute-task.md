@@ -12,6 +12,7 @@
 根据任务涉及的工种查找可用的 `forge-*` skills：
 
 - 前端 → `forge-frontend-engineer`
+- 后端/API → `forge-backend-engineer`
 - 数据库 → `forge-database-engineer`
 - 合约 → `forge-contract-engineer`
 - QA/测试 → `forge-qa-engineer`

@@ -135,6 +135,7 @@ Forge 包含针对不同开发任务的专业代理：
 
 - **forge-implementer**：通用实现
 - **forge-frontend-engineer**：React/Vue/前端开发
+- **forge-backend-engineer**：后端/API 开发
 - **forge-qa-engineer**：测试和质量保证
 - **forge-doc-syncer**：文档同步
 

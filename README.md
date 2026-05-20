@@ -135,6 +135,7 @@ Forge includes specialized agents for different development tasks:
 
 - **forge-implementer**: General-purpose implementation
 - **forge-frontend-engineer**: React/Vue/frontend development
+- **forge-backend-engineer**: Backend/API development
 - **forge-qa-engineer**: Testing and quality assurance
 - **forge-doc-syncer**: Documentation synchronization
 
