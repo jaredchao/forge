@@ -1,0 +1,24 @@
+docs/superpowers/specs/2026-05-20-forge-dashboard-design.md
+  s_3d3e4425770b5e::t_c7c322b59a78d0 1-10,12-50,60-97,100-106,108,110,125-127,144,146-175,177-182,204-208,211-231,233-252,254,257-261,263,274-285,289-310,312-315,317-318,320
+  s_3d3e4425770b5e::t_8b359bdddb8a9f 262,264-268,270-273,286-288,311,316,319
+  s_3d3e4425770b5e::t_466d645601a1b6 11,51-59,98-99,107,109,128-143,145
+  s_3d3e4425770b5e::t_f61838bc044b13 176,183-203,209,232,253,255-256
+  s_3d3e4425770b5e::t_450dc826c718bc 111-124,269
+  s_3d3e4425770b5e::t_4ceec5860a7357 210
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "494b7fef29e18adeda2d3d3bab872f1160e4523a",
+  "prompts": {},
+  "sessions": {
+    "s_3d3e4425770b5e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e4427-c877-7703-9b07-46e0e9ac40a1",
+        "model": "gpt-5.5"
+      },
+      "human_author": "muluo <mengchao1027@gmail.com>"
+    }
+  }
+}
