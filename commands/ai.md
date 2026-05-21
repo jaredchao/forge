@@ -49,10 +49,13 @@ START
 │   │   [N4: Review] ── Spec Compliance → Codex Review（三段式）
 │   │     │
 │   │     ▼
-│   │   [N5: 标记完成] ── tasks.md 标 [x]、写 LESSONS.md
+│   │   [N5-A: 标 tasks.md] ── 当前 task 标 [x]、写 LESSONS.md
 │   │     │
 │   │     ▼
 │   │   [N6: QA 评估] ── 评分决定是否触发 forge-qa-engineer
+│   │     │
+│   │     ▼
+│   │   [N5-B: 回写 AC] ── QA 返回 PASS/MANUAL 时，按 AC 回写指令更新 requirements.md（其他情况跳过）
 │   │     │
 │   │     ▼
 │   │   [N7: 上下文管理] ── 任务间无需 /clear（Subagent 天然隔离）

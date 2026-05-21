@@ -53,7 +53,11 @@ AI 动态决策是否触发 `forge-qa-engineer`，不按固定间隔。
 
 | 结果 | 后续 |
 | ---- | ---- |
-| PASS | 继续 N7 |
-| FAIL | 读取失败详情 → 派发修复 task → 重新触发 QA（最多 3 轮） |
-| BLOCKED | **先让 QA subagent 自诊断**（缺 env / 端口冲突 / 依赖缺失 / 启动命令错），尝试修复并重启服务；自诊断 2 轮无果，才升级给用户并附诊断报告。**不允许直接把"启动服务器"踢回用户。** |
-| MANUAL_REQUIRED | 输出手动测试清单（含每条不可自动化 AC 的原因），等待用户确认 |
+| PASS | 提取 QA 报告里的「🔁 AC 回写指令」 → 透传给 N5 完成 AC 回写 → 继续 N7 |
+| FAIL | 读取失败详情 → 派发修复 task → 重新触发 QA（最多 3 轮）。AC 不回写。 |
+| BLOCKED | **先让 QA subagent 自诊断**（缺 env / 端口冲突 / 依赖缺失 / 启动命令错），尝试修复并重启服务；自诊断 2 轮无果，才升级给用户并附诊断报告。**不允许直接把"启动服务器"踢回用户。** AC 不回写。 |
+| MANUAL_REQUIRED | 输出手动测试清单（含每条不可自动化 AC 的原因）；将 PASS 部分的 AC 透传给 N5 回写为 `[x]`，MANUAL_REQUIRED 部分透传给 N5 回写为 `[ ] ⚠️ MANUAL: {原因}`；等待用户对手动 AC 的人工确认 |
+
+## AC 回写透传格式
+
+Controller 从 QA 报告里提取「🔁 AC 回写指令」段，原样转发给 N5（不裁剪、不改写），由 N5 执行 `requirements.md` 的 Edit。Controller 自己**不直接动** requirements.md，避免与 N5 的写入冲突。
