@@ -1,0 +1,20 @@
+commands/ai.md
+  s_0fe4b53579c725::t_417a203d5ff0f9 5-6,8,11-29
+  s_0fe4b53579c725::t_fdc49ec1b87581 86-133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "d52f1b38c15c947a8f8bb9fce529193ad620b38d",
+  "prompts": {},
+  "sessions": {
+    "s_0fe4b53579c725": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c21b7df9-3f5d-4571-929c-916ffc3934ca",
+        "model": "kimi-for-coding"
+      },
+      "human_author": "muluo <mengchao1027@gmail.com>"
+    }
+  }
+}
