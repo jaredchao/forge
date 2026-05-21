@@ -89,6 +89,29 @@ Agent 工具（general-purpose 或匹配的 forge-* skill）:
     - 是否遵循了 TDD（如 task 要求）？
     - 测试覆盖是否全面？
 
+    **可运行性（硬门槛，不可跳过、不可用"测试通过"替代）：**
+
+    绿色测试 ≠ 服务能跑。报 DONE 之前，必须在真实运行环境跑一次以下对应项目类型的验证；任何一项失败、跳过或无法执行，状态必须降为 BLOCKED，禁止报 DONE 或 DONE_WITH_CONCERNS：
+
+    - **后端服务 / API**：
+      1. 启动服务进程（`npm run dev` / `go run` / `uvicorn` / 项目实际启动命令），确认进程不在启动阶段崩溃
+      2. 命中健康检查端点（`/health`、`/ping`、`/readyz` 或项目约定的端点），返回 2xx
+      3. 用 curl / httpie / 内置 HTTP client（或项目预置 API E2E、chrome-mcp 后台请求、agent-browser）调用本次新增或修改的**每个 endpoint** 至少 1 条 happy path，记录请求、状态码、响应体到报告中
+      4. 涉及鉴权的端点，至少跑 1 条 401/403 失败路径
+    - **前端**：
+      1. `npm run build`（或项目实际构建命令）必须 0 error 通过
+      2. 启动 dev server（`npm run dev` 等），访问本次新增或修改的**每个路由**，确认页面渲染、控制台无 error、网络请求按预期发出 — 访问手段不限：项目预置 E2E 框架（Playwright/Cypress 等）、chrome-mcp（无需安装即可驱动浏览器）、agent-browser 或手动打开浏览器都可
+      3. 涉及表单/交互的，至少触发 1 次提交或主交互，确认前后端串联正常（同样可用上述任一手段，选哪种就记录哪种证据）
+    - **数据库 / migration**：
+      1. 在与生产 schema 一致的本地或 docker 数据库上跑一次 `migrate up`，成功
+      2. 再跑一次 `migrate down`，成功（不可逆 migration 显式说明并经 spec 允许）
+      3. 跑一次 `migrate up` 之后，针对本次变更的表至少做 1 次 SELECT/INSERT 验证 schema 与代码模型匹配
+    - **CLI / 脚本 / 库**：
+      1. 在干净环境（新 shell / 新 venv / 新进程）中按 README 安装步骤跑一次，确认安装本身不报错
+      2. 执行至少 1 条本次新增或修改的命令/入口函数的 happy path，确认实际输出符合预期
+
+    每一项的实际命令、输出片段、状态码必须写进下面的「报告格式」里。"我假定能跑"、"测试都过了所以应该没问题"、"环境起不来所以跳过" 都属于必须 BLOCKED 的情形。
+
     自审发现问题，先修复再报告。
 
     ## 报告格式
@@ -97,12 +120,14 @@ Agent 工具（general-purpose 或匹配的 forge-* skill）:
     - **Status:** DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
     - 实现了什么（或尝试了什么，如果 blocked）
     - 测试内容和结果
+    - **可运行性验证证据**（按上面硬门槛逐项填写实际执行的命令、输出片段、HTTP 状态码 / build 结果 / migration 输出；不可写"已验证"之类的空话）
     - 变更的文件
     - 自审发现（如有）
     - 任何疑虑或问题
 
-    DONE_WITH_CONCERNS：完成了工作但对正确性有疑虑。
-    BLOCKED：无法完成 task。
+    DONE：代码完成 **且** 可运行性硬门槛全部跑通且有证据。
+    DONE_WITH_CONCERNS：完成了工作且服务能跑起来，但对正确性有疑虑。可运行性未跑通**不允许**用这个状态掩盖。
+    BLOCKED：无法完成 task，或可运行性硬门槛任一项失败/无法执行。
     NEEDS_CONTEXT：缺少必要信息。
-    不要默默产出你不确定的工作。
+    不要默默产出你不确定的工作。绿色测试不是服务能跑的证明，进程真的起来、请求真的得到响应才是。
 ```

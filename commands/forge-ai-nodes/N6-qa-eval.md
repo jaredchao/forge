@@ -17,6 +17,8 @@ AI 动态决策是否触发 `forge-qa-engineer`，不按固定间隔。
 - API 接口变更
 - 数据库 migration
 - 认证/授权/支付逻辑
+- **新增或修改用户可达路由 / UI 交互 / CLI 命令**（任何用户可感知的入口）
+- **新增或修改服务启动配置 / 依赖注入 / 环境变量**（直接影响"服务能否跑起来"）
 - 连续 5 个 task 未触发过 QA
 
 ## 跳过
@@ -36,9 +38,16 @@ AI 动态决策是否触发 `forge-qa-engineer`，不按固定间隔。
 
 触发后，Controller 以 subagent 方式派发 `forge-qa-engineer`：
 
-1. 注入上下文：当前 feature 的 prd.md / design.md / tasks.md 路径、触发原因、服务端口
-2. Subagent 执行浏览器自动化测试（Chrome MCP）
+1. 注入上下文：当前 feature 的 prd.md / design.md / tasks.md 路径、触发原因、服务启动命令、健康检查端点、所需环境变量
+2. Subagent 严格按 `forge-qa-engineer` 工作流执行：**先服务健康检查 → 再补测试 → 再跑测试 → 再 E2E + 端到端冒烟 → 再 AC 映射核验**
 3. 返回 `QA_RESULT: PASS | FAIL | BLOCKED | MANUAL_REQUIRED`
+
+**PASS 的硬条件**（Controller 必须核对，subagent 报告 PASS 但缺任一项即降级为 FAIL）：
+- 服务健康检查全绿
+- 单测 / 集成测试全绿
+- E2E ≥ 1 用例且全绿（0 用例不算 PASS）
+- 端到端冒烟 PASS（命中真实后端，非纯 mock）
+- 每条 AC 都有明确证据或不可自动化说明
 
 ## 结果处理
 
@@ -46,5 +55,5 @@ AI 动态决策是否触发 `forge-qa-engineer`，不按固定间隔。
 | ---- | ---- |
 | PASS | 继续 N7 |
 | FAIL | 读取失败详情 → 派发修复 task → 重新触发 QA（最多 3 轮） |
-| BLOCKED | 告知用户启动开发服务器，等待后手动重触发 |
-| MANUAL_REQUIRED | 输出手动测试清单，等待用户确认 |
+| BLOCKED | **先让 QA subagent 自诊断**（缺 env / 端口冲突 / 依赖缺失 / 启动命令错），尝试修复并重启服务；自诊断 2 轮无果，才升级给用户并附诊断报告。**不允许直接把"启动服务器"踢回用户。** |
+| MANUAL_REQUIRED | 输出手动测试清单（含每条不可自动化 AC 的原因），等待用户确认 |
