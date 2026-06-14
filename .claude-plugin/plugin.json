@@ -1,7 +1,7 @@
 {
   "name": "forge",
   "description": "PRD-driven automated development system with AI-powered spec generation, task execution, and quality review",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "Jared",
     "email": "jaredchao@users.noreply.github.com"

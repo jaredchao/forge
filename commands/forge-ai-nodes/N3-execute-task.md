@@ -7,18 +7,24 @@
    Feature {F}/{总F} | 任务 {N}/{总数}
 ```
 
-## Skill 匹配
+## 工种匹配 → 具名 subagent
 
-根据任务涉及的工种查找可用的 `forge-*` skills：
+根据任务涉及的工种，优先派发对应的**具名 subagent**（`subagent_type`，自带工具沙箱与 `model: sonnet`）：
 
-- 前端 → `forge-frontend-engineer`
-- 后端/API → `forge-backend-engineer`
-- 数据库 → `forge-database-engineer`
-- 合约 → `forge-contract-engineer`
-- QA/测试 → `forge-qa-engineer`
-- 没有匹配 → 使用通用 implementer
+| 工种 | subagent_type | 内部加载的 skill |
+| ---- | ------------- | ---------------- |
+| 前端 | `forge-frontend-engineer` | `forge-frontend-engineer` |
+| 后端/API | `forge-backend-engineer` | `forge-backend-engineer` |
+| 数据库 | `forge-database-engineer` | `forge-database-engineer` |
+| 合约 | `forge-contract-engineer` | `forge-contract-engineer` |
+| QA/测试 | `forge-qa-engineer`（通常由 N6 触发） | `forge-qa-engineer` |
+| 无匹配工种 | `forge-implementer`（通用兜底） | — |
+
+具名 subagent 第一步会强制 `Skill` 加载同名 skill，无需主流程再手动指定 skill。
 
 ## 模型选择
+
+具名工种 subagent 已自带 `model: sonnet`。下表用于**无匹配工种 → 走 `forge-implementer` 兜底**时，由主流程为 implementer 选模型：
 
 | 任务特征 | 模型 |
 | -------- | ---- |
@@ -26,10 +32,12 @@
 | 跨文件集成，有判断逻辑 | 标准模型 |
 | 架构设计、需要广泛理解 | 最强模型 |
 
-## 派发 Implementer Subagent
+## 派发 Subagent
 
-使用 Agent 工具（general-purpose 或匹配的 forge-* skill）派发，**不直接执行任务**。
-参照 `${CLAUDE_PLUGIN_ROOT}/skills/forge-implementer/implementer-prompt.md` 构建 prompt，将以下内容完整传入：
+使用 Agent 工具派发上表匹配到的具名 subagent，**不直接执行任务**。
+无匹配工种时退回 `forge-implementer`（general-purpose），并参照 `${CLAUDE_PLUGIN_ROOT}/skills/forge-implementer/implementer-prompt.md` 构建 prompt。
+
+无论走具名 subagent 还是 implementer 兜底，派发 prompt 都须将以下内容完整传入（不让 subagent 自己漫读文件）：
 
 - task 完整文本（从 tasks.md 提取，不让 subagent 自己读文件）
 - 场景上下文（当前 feature 位置、依赖、架构背景）

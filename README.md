@@ -136,8 +136,19 @@ Forge includes specialized agents for different development tasks:
 - **forge-implementer**: General-purpose implementation
 - **forge-frontend-engineer**: React/Vue/frontend development
 - **forge-backend-engineer**: Backend/API development
+- **forge-database-engineer**: Data modeling, migrations, query optimization
+- **forge-contract-engineer**: Smart contract development (EVM/Solana/Move)
 - **forge-qa-engineer**: Testing and quality assurance
 - **forge-doc-syncer**: Documentation synchronization
+
+Auxiliary skills (invoked on demand, not dispatched per task):
+
+- **forge-spec-writer**: Requirement docs → requirements/design/tasks specs
+- **forge-code-reviewer**: Two-round code review + security scan (Telegram alert on findings)
+- **forge-test-runner**: Auto-generate and run unit/E2E tests + visual regression
+- **forge-security**: METATRON-based penetration testing of deployment targets
+
+Each engineering discipline (frontend/backend/database/contract/qa) is also exposed as a **subagent** (`agents/forge-*-engineer`) with its own tool sandbox and `model: sonnet`. N2 dispatches them per-discipline for parallel work with natural context isolation; each subagent loads its same-named skill as the single source of truth.
 
 ## Architecture
 
