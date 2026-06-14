@@ -136,8 +136,19 @@ Forge 包含针对不同开发任务的专业代理：
 - **forge-implementer**：通用实现
 - **forge-frontend-engineer**：React/Vue/前端开发
 - **forge-backend-engineer**：后端/API 开发
+- **forge-database-engineer**：数据模型/migration/查询优化
+- **forge-contract-engineer**：智能合约开发（EVM/Solana/Move）
 - **forge-qa-engineer**：测试和质量保证
 - **forge-doc-syncer**：文档同步
+
+辅助 skill（非每 task 派发，按需调用）：
+
+- **forge-spec-writer**：需求文档 → requirements/design/tasks 规格
+- **forge-code-reviewer**：两轮代码审查 + 安全扫描（安全问题 Telegram 通知）
+- **forge-test-runner**：自动生成并运行单测/E2E + 可视化回归
+- **forge-security**：基于 METATRON 的部署目标渗透测试
+
+各开发工种同时以 **subagent 形式**提供（`agents/forge-*-engineer`，含 frontend/backend/database/contract/qa），自带工具沙箱与 `model: sonnet`，N2 并行时按工种派发、上下文天然隔离；subagent 内部强制加载同名 skill 作为唯一行为准则。
 
 ## 架构
 

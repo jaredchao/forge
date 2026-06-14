@@ -93,6 +93,6 @@ To modify the plugin:
 
 ## Version
 
-Current version: 1.0.0
+Current version: 1.1.0
 
 See [CHANGELOG.md](../CHANGELOG.md) for version history.

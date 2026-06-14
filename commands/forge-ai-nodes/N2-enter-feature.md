@@ -14,7 +14,7 @@
 | 会修改同一文件/模块 | 分属不同代码项目 |
 | 涉及共享状态定义（schema、API） | 天然隔离 |
 
-并行时用 Agent 工具派发子 agent。所有任务都有依赖时退化为全串行。
+并行时用 Agent 工具派发**对应工种的具名 subagent**（`subagent_type` = `forge-{工种}-engineer`，见 N3 工种映射），而非 general-purpose。每个 subagent 自带工具沙箱与 `model: sonnet`，上下文天然隔离。所有任务都有依赖时退化为全串行。
 
 输出：
 
