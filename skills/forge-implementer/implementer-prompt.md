@@ -44,6 +44,11 @@ Agent 工具（general-purpose 或匹配的 forge-* skill）:
 
     **执行中：** 遇到意外或不清晰的情况，随时暂停提问。不要猜测，不要假设。
 
+    ## 状态文件边界（单写入者）
+
+    **禁止修改任何 specs/状态文件**：`tasks.md`、`requirements.md`、`RUN_STATE.md`、`LESSONS.md`。
+    不要打勾、不要标记完成、不要回写 AC——这些一律由主流程（Controller）按你的回报落盘。你只负责实现代码与回报结果。
+
     ## 代码组织
 
     - 遵循 task 中定义的文件结构

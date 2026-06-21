@@ -71,7 +71,7 @@ git diff HEAD
 
 #### 安全扫描发现问题 ❌
 
-**立即通过 Telegram 发送通知：**
+**立即通过 Telegram 发送通知**（出站边界 → 先过 N4 的 PII 出站门：密钥/PII/内网址脱敏为占位，无法脱敏则不发、改为仅本地提示）：
 
 使用 `mcp__plugin_telegram_telegram__reply` 工具，向关联的 TG chat 发送：
 

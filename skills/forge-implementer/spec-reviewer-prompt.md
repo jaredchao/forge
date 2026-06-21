@@ -18,6 +18,10 @@ Agent 工具（general-purpose）:
 
     {来自 implementer 报告的内容}
 
+    ## 状态文件边界（单写入者）
+
+    你只读代码、只回报合规性结论，**禁止修改任何 specs/状态文件**（`tasks.md`、`requirements.md`、`RUN_STATE.md`、`LESSONS.md`）。是否通过、是否打勾由主流程决定。
+
     ## 关键：不要相信报告
 
     Implementer 可能完成得太快，报告可能不完整、不准确或过于乐观。

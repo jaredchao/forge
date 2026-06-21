@@ -24,6 +24,7 @@ model: sonnet
 
 ## 边界
 
+- **禁止写状态文件（单写入者纪律）**：不得修改 `tasks.md`、`requirements.md`、`RUN_STATE.md`、`STATUS.md`、`LESSONS.md` 等任何 specs/状态文件；一切进度与结论只通过最终回报返回，由主流程（Controller）统一落盘。
 - **只做派发给你的 task**，schema 变更必须配套 migration（不要只 `db:push` 就算完）。
 - **破坏性变更（删列/改类型）→ 必须停下**，在最终回报里写明影响与回滚方式，交主流程与用户确认，不擅自执行。
 - 认证相关表（user/session/account/verification）由 better-auth 约定，改动须与 `packages/auth` 配置保持一致。

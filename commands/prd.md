@@ -1,5 +1,8 @@
 # /forge:prd — 需求文档 → 开发规格生成
 
+> **这是一个 command，不是 skill。** 注入即指令，直接按下面步骤执行，不要去找名为 `forge-prd` 的 skill。
+> **内部/高级命令**——日常请用入口 `/forge:start`（它自动判断新建/变更并调用本流程）。
+
 支持两种模式：新建需求和需求变更。
 
 ## 输入参数
@@ -9,7 +12,7 @@
 - **新建模式**：`/forge:prd {PROJECT_DIR}`
 - **变更模式**：`/forge:prd --change {N}.{feature-name} 变更内容描述`
 
-单仓库模式：`PROJECT_DIR` 是项目仓库的根目录，`docs/` 和代码在同一个仓库内。
+单仓库模式：`PROJECT_DIR` 是项目仓库的根目录，`docs/` 和代码在同一个仓库内。**新建模式下若未提供 `PROJECT_DIR`（裸跑 `/forge:prd`），默认取当前工作目录（cwd）**，即 `/forge:prd` 等价于 `/forge:prd .`。
 
 ```text
 {PROJECT_DIR}/
@@ -33,7 +36,7 @@
 
 ### Step 1: 解析输入，读取需求文档
 
-从 `$ARGUMENTS` 提取项目文件夹路径，记为 `PROJECT_DIR`。
+从 `$ARGUMENTS` 提取项目文件夹路径，记为 `PROJECT_DIR`；**未提供则取当前工作目录（cwd）**。
 
 读取 `{PROJECT_DIR}/docs/prd/` 下的所有文件作为需求源：
 
@@ -263,7 +266,7 @@
 - Specs 路径
 - 涉及的技术层
 - 总任务数和预估总时间
-- 提示用户：**请审查 specs 后，运行 `/forge:ai` 或 `/forge:autoai` 开始开发**
+- 提示用户：**请审查 specs 后，运行 `/forge:ai` 开始开发**
 
 ---
 
@@ -371,7 +374,7 @@
 删除: 1 个功能需求, 1 个任务
 未受影响: 3 个已完成任务保持不动
 
-请产品审查变更后，运行 /forge:autoai 继续开发（会跳过已完成任务）
+请产品审查变更后，运行 /forge:ai 继续开发（会跳过已完成任务）
 ```
 
 ---

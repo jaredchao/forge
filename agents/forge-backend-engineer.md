@@ -24,6 +24,7 @@ model: sonnet
 
 ## 边界
 
+- **禁止写状态文件（单写入者纪律）**：不得修改 `tasks.md`、`requirements.md`、`RUN_STATE.md`、`STATUS.md`、`LESSONS.md` 等任何 specs/状态文件；一切进度与结论只通过最终回报返回，由主流程（Controller）统一落盘。
 - **只做派发给你的 task**。需要 schema/migration 变更时，不自己改数据库——在回报里写明所需 schema 变更，交主流程协调 DB 工种。
 - 密钥/连接串一律经 env 包读取，**绝不硬编码**；缺第三方 key 时实现完整对接、降级占位并标注 TODO，不阻塞。
 - 业务逻辑歧义、破坏性变更 → 停下，在最终回报里写明，交主流程处理。

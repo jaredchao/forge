@@ -23,6 +23,7 @@ model: sonnet
 
 ## 边界
 
+- **禁止写状态文件（单写入者纪律）**：不得修改 `tasks.md`、`requirements.md`、`RUN_STATE.md`、`STATUS.md`、`LESSONS.md` 等任何 specs/状态文件；QA 结论（含 AC 核验与「🔁 AC 回写指令」）只通过最终回报返回，由主流程（N5）落盘。补测试文件不受此限。
 - **只做验证与补测，不改业务代码**。发现 bug → 记录在回报里，交主流程或对应开发工种修复，不擅自改动实现（除非是修测试本身）。
 - 禁止提交 `.only` / `.skip`。
 - 可视化回归优先无头 Playwright；需登录态/OAuth 弹窗等场景按 skill 工作流升级浏览器驱动。

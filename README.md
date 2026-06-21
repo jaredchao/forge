@@ -30,115 +30,102 @@ claude plugin install forge
 
 ## Quick Start
 
-### 1. Initialize Project Structure
+Three steps, three commands.
+
+### 1. Write your requirements
+
+Drop your requirement docs into `docs/prd/`:
+
+```
+your-project/
+└── docs/
+    └── prd/
+        └── feature.md
+```
+
+### 2. Generate specs
 
 ```bash
 cd your-project
-/forge:init
+/forge:start
 ```
 
-This creates:
-```
-your-project/
-├── docs/
-│   ├── prd/          # Place your PRD documents here
-│   └── specs/        # Generated specs (auto-created)
-└── .claude/
-    ├── CLAUDE.md     # Project context
-    └── rules/        # Coding standards
-```
+`start` initializes `.claude/` if needed, reads `docs/prd/`, and generates `requirements.md` + `design.md` + `tasks.md` under `docs/specs/{N}.{feature-name}/`. Re-running with an existing spec enters **change mode** (versioned requirement updates).
 
-### 2. Generate Specs from PRD
-
-Place your requirement document in `docs/prd/`, then:
+### 3. Auto-develop & track
 
 ```bash
-/forge:prd ~/path/to/your-project
+/forge:run        # executes N1–N8 for every task, auto-resuming from RUN_STATE
+/forge:status     # read-only: phase, progress, active task, next step
 ```
 
-Forge will:
-- Read PRD documents from `docs/prd/`
-- Analyze project architecture and tech stack
-- Generate `requirements.md`, `design.md`, and `tasks.md` in `docs/specs/{N}.{feature-name}/`
-
-### 3. Execute Automated Development
-
-```bash
-/forge:ai ~/path/to/your-project
-```
-
-Forge will:
-- Execute tasks sequentially with specialized agents
-- Perform spec compliance review after each task
-- Run Codex code quality review
-- Mark completed tasks and record lessons learned
-- Continue until all features are implemented
+`run` dispatches discipline subagents, runs tiered review + QA + security gates, marks tasks done, and continues until every feature is implemented.
 
 ## Workflow
 
 ```
-PRD Document
+Requirements (docs/prd/)
     ↓
-[/forge:prd] → Generate Specs
+[/forge:start] → specs: requirements.md + design.md + tasks.md
     ↓
-requirements.md + design.md + tasks.md
+[/forge:run] → Automated Development (N1–N8)
     ↓
-[/forge:ai] → Automated Development
+For each task (depth scales with risk × size):
+  1. Dispatch the matching discipline subagent (platform/backend/…)
+  2. Review — Fast: Codex only · Standard/Full: Spec + Codex
+  3. QA + security gate (conditional: E2E only for user-facing surface)
+  4. Mark done + record lessons → RUN_STATE / STATUS / tasks
     ↓
-For each task:
-  1. Match specialized skill (frontend/backend/QA)
-  2. Dispatch implementer subagent
-  3. Spec compliance review
-  4. Codex quality review
-  5. Mark done + record lessons
-    ↓
-Production-Ready Code
+[/forge:status] anytime → Production-Ready Code
 ```
 
 ## Commands
 
-### `/forge:prd`
+Forge exposes **3 entrypoints**. Everything else is internal — the controller orchestrates it.
 
-Generate development specifications from PRD documents.
+### `/forge:start` — turn requirements into specs
 
-**New Feature:**
-```bash
-/forge:prd ~/code/my-app
-```
-
-**Change Request:**
-```bash
-/forge:prd --change 1.user-auth "Add WeChat login support"
-/forge:prd --change 2 "Update validation logic"
-```
-
-### `/forge:ai`
-
-Execute automated development workflow.
+Put your requirement docs in `docs/prd/`, then run start. It auto-decides what's needed: initializes `.claude/` if missing, generates specs (new or **change** mode if specs already exist), and splits large requirements into modules.
 
 ```bash
-/forge:ai ~/code/my-app
+/forge:start                       # runs in the current project dir
+/forge:start "add WeChat login"    # change mode auto-detected when specs exist
 ```
 
-### `/forge:init`
+### `/forge:run` — auto-develop
 
-Initialize Forge project structure (creates `docs/` and `.claude/` directories).
+Executes the N1–N8 pipeline, auto-resuming the current task from `RUN_STATE.md` and continuing to the next until done.
 
 ```bash
-cd your-project
-/forge:init
+/forge:run
+/forge:run --feature 1.user-auth   # advanced: scope to one feature
+/forge:run --stage review          # advanced: re-enter a single stage
 ```
+
+### `/forge:status` — see progress
+
+Read-only. Reports phase, per-feature progress, the active task/stage, security findings, and the suggested next step — all from the state files.
+
+```bash
+/forge:status
+```
+
+### Internal / advanced commands
+
+These are orchestrated by the 3 entrypoints above; run them directly only when you want fine control: `/forge:init` (context only), `/forge:prd` (spec gen / `--change`), `/forge:ai` (the N1–N8 engine; `/forge:run` calls it), `/forge:retro` (retrospective).
 
 ## Specialized Skills
 
 Forge includes specialized agents for different development tasks:
 
-- **forge-implementer**: General-purpose implementation
+- **forge-implementer**: General-purpose fallback (dispatched as `general-purpose` for tasks that match no discipline)
+- **forge-platform-engineer**: Project init & infra, language-agnostic (Node/Java/Python/Go/Rust/.NET…) — project scaffolding, multi-module/workspace, build & dependency systems, Docker, CI/CD, env scaffolding
 - **forge-frontend-engineer**: React/Vue/frontend development
 - **forge-backend-engineer**: Backend/API development
 - **forge-database-engineer**: Data modeling, migrations, query optimization
 - **forge-contract-engineer**: Smart contract development (EVM/Solana/Move)
 - **forge-qa-engineer**: Testing and quality assurance
+- **forge-security-engineer**: First-class security gate — code-level audit (OWASP) + optional dynamic scan, triggered by N6 on high-risk changes
 - **forge-doc-syncer**: Documentation synchronization
 
 Auxiliary skills (invoked on demand, not dispatched per task):
@@ -148,7 +135,7 @@ Auxiliary skills (invoked on demand, not dispatched per task):
 - **forge-test-runner**: Auto-generate and run unit/E2E tests + visual regression
 - **forge-security**: METATRON-based penetration testing of deployment targets
 
-Each engineering discipline (frontend/backend/database/contract/qa) is also exposed as a **subagent** (`agents/forge-*-engineer`) with its own tool sandbox and `model: sonnet`. N2 dispatches them per-discipline for parallel work with natural context isolation; each subagent loads its same-named skill as the single source of truth.
+Each engineering discipline (platform/frontend/backend/database/contract/qa/security) is also exposed as a **subagent** (`agents/forge-*-engineer`) with its own tool sandbox and `model: sonnet`. N2 dispatches them per-discipline for parallel work with natural context isolation; each subagent loads its skill as the single source of truth. Subagents are read-only on state files — only the controller writes specs/state (single-writer rule).
 
 ## Architecture
 
@@ -165,6 +152,9 @@ your-project/
 │       │   ├── design.md       # Technical design
 │       │   └── tasks.md        # Task breakdown
 │       ├── 2.payment/
+│       ├── STATUS.md           # Global board (single-writer)
+│       ├── RUN_STATE.md        # Runtime state (single-writer; resume point)
+│       ├── security/           # Security reports per feature
 │       └── LESSONS.md          # Lessons learned
 ├── .claude/
 │   ├── CLAUDE.md               # Project context
@@ -180,6 +170,12 @@ Every task goes through two mandatory review stages:
 2. **Codex Quality Review**: Checks code quality, security (OWASP Top 10), and best practices
 
 Failed reviews trigger automatic fixes before proceeding.
+
+### Checkpoint & Recovery (`RUN_STATE.md`)
+
+Forge tracks a per-task lifecycle (`IMPLEMENTING → VERIFYING → REVIEWING → QA → DONE`) in `docs/specs/RUN_STATE.md`. Combined with `tasks.md` checkboxes and a recorded Git/spec-fingerprint baseline, this lets a re-run of `/forge:ai` **resume mid-task** (e.g. restart at the review stage instead of redoing the whole task) and verify the working tree still matches before continuing — recovery never relies on chat history.
+
+`RUN_STATE.md`, `tasks.md`, `requirements.md`, and `LESSONS.md` follow a **single-writer** rule: only the controller writes them. Subagents return results and never touch state files, so parallel work can't corrupt the resume point.
 
 ## Configuration
 
@@ -232,7 +228,7 @@ Forge will:
 
 ### Parallel Execution
 
-Tasks without dependencies are executed in parallel automatically.
+Independent tasks are dispatched to parallel subagents — but only when each runs in an isolated `git worktree` so they can't clobber each other's working tree or muddy diff attribution. Without worktree isolation, Forge marks them as parallel candidates and falls back to serial execution.
 
 ### Context Management
 
